@@ -1,6 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json; charset=UTF-8');
 
 include_once dirname(__FILE__, 2) . '/Config/Database.php';
 include_once dirname(__FILE__, 2) . '/Models/Employee.php';
@@ -38,6 +38,6 @@ if ($itemCount > 0) {
 } else {
     http_response_code(404);
     echo json_encode(
-        array("message" => "No record found.")
+        array('message' => 'No record found.')
     );
 }
