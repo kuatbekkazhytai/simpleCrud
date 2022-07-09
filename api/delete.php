@@ -24,7 +24,7 @@ $data = json_decode(file_get_contents("php://input"));
 $model->id = $data->id;
 
 if ($repository->deleteEmployee()) {
-    echo json_encode("Employee deleted.");
+    echo json_encode("Employee deleted");
 } else {
     echo json_encode("Data could not be deleted");
 }

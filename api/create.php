@@ -27,7 +27,7 @@ $model->created = date('Y-m-d H:i:s');
 $repository = new EmployeeRepository($conn, $model);
 
 if ($repository->createEmployee()) {
-    echo 'Employee created successfully.';
+    echo 'Employee created successfully';
 } else {
-    echo 'Employee could not be created.';
+    echo 'Employee could not be created';
 }

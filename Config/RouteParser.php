@@ -24,7 +24,7 @@ class RouteParser {
         preg_match_all("/(?<={).+?(?=})/", $route, $paramMatches);
 
         //if the route does not contain any param call simpleRoute();
-        if(empty($paramMatches[0])) {
+        if (empty($paramMatches[0])) {
             self::simpleRoute($file,$route);
             return;
         }

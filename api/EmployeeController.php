@@ -44,7 +44,7 @@ class EmployeeController
                     'designation' => $designation,
                     'created' => $created
                 );
-                array_push($employeeArr["body"], $e);
+                array_push($employeeArr['body'], $e);
             }
             echo json_encode($employeeArr);
         } else {
