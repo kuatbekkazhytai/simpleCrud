@@ -18,7 +18,6 @@ class DbConfigs
             'db_name' => self::$database_name,
             'db_username' => self::$username,
             'db_password' => self::$password,
-
         );
     }
 }
