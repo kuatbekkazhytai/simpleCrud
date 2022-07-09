@@ -19,8 +19,7 @@ class EmployeeController
 
     public function __construct()
     {
-        $database = new Database();
-        $conn = $database->getConnection();
+        $conn = Database::getDbConnection();
         $model = new Employee();
         $this->repository = new EmployeeRepository($conn, $model);
     }

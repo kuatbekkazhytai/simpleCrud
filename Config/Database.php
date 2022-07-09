@@ -2,28 +2,63 @@
 
 namespace App\Config;
 
-use PDO;
-use PDOException;
-// TODO refactor to singleton
-class Database {
+include_once dirname(__FILE__) . '/DbConfigs.php';
 
-    private $host = '127.0.0.1';
-    private $database_name = 'phpapidb';
-    private $username = 'kuatbek';
-    private $password = 'lfc8milan22';
-    public $conn;
+use PDO;
+use Exception;
+
+class Database {
+    /**
+     * @var Database
+     */
+    private static $instance;
+    /** @var PDO */
+    private $dbConn;
+
+    private function __construct() {}
+
+    /**
+     * @return Database
+     */
+    private static function getInstance(): Database {
+        if (self::$instance == null){
+            $className = __CLASS__;
+            self::$instance = new $className;
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * @return Database
+     */
+    private static function initConnection(): Database{
+        $db = self::getInstance();
+        $configs = DbConfigs::getConfigs();
+        $db->dbConn = new PDO('mysql:host=' . $configs['db_host'] . ';dbname=' . $configs['db_name'], $configs['db_username'], $configs['db_password']);
+        $db->dbConn->exec('set names utf8');
+
+        return $db;
+    }
 
     /**
      * @return PDO|null
      */
-    public function getConnection(): PDO {
-        $this->conn = null;
-        try{
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->database_name, $this->username, $this->password);
-            $this->conn->exec("set names utf8");
-        } catch(PDOException $exception){
-            echo "Database could not be connected: " . $exception->getMessage();
+    public static function getDbConnection(): ?PDO {
+        try {
+            $db = self::initConnection();
+            return $db->dbConn;
+        } catch (Exception $ex) {
+            echo 'I was unable to open a connection to the database. ' . $ex->getMessage();
+            return null;
         }
-        return $this->conn;
+    }
+
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function __clone() {
+        throw new Exception("Can't clone a singleton");
     }
 }
