@@ -13,8 +13,7 @@ use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use App\config\Database;
 
-$database = new Database();
-$conn = $database->getConnection();
+$conn = Database::getDbConnection();
 $model = new Employee();
 $repository = new EmployeeRepository($conn, $model);
 
