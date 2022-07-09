@@ -29,10 +29,3 @@ class Employee implements ModelInterface
     }
 }
 
-//interface ModelInterface
-//{
-//    /**
-//     * @return string
-//     */
-//    public function getTableName(): string;
-//}

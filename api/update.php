@@ -31,7 +31,7 @@ $model->designation = $data->designation;
 $model->created = date('Y-m-d H:i:s');
 
 if ($repository->updateEmployee()) {
-    echo json_encode("Employee data updated.");
+    echo json_encode('Employee data updated.');
 } else {
-    echo json_encode("Data could not be updated");
+    echo json_encode('Data could not be updated');
 }

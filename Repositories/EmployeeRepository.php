@@ -108,12 +108,12 @@ class EmployeeRepository
 
         $stmt = $this->conn->prepare($sqlQuery);
 
-        $this->model->name=htmlspecialchars(strip_tags($this->model->name));
-        $this->model->email=htmlspecialchars(strip_tags($this->model->email));
-        $this->model->age=htmlspecialchars(strip_tags($this->model->age));
-        $this->model->designation=htmlspecialchars(strip_tags($this->model->designation));
-        $this->model->created=htmlspecialchars(strip_tags($this->model->created));
-        $this->model->id=htmlspecialchars(strip_tags($this->model->id));
+        $this->model->name = htmlspecialchars(strip_tags($this->model->name));
+        $this->model->email = htmlspecialchars(strip_tags($this->model->email));
+        $this->model->age = htmlspecialchars(strip_tags($this->model->age));
+        $this->model->designation = htmlspecialchars(strip_tags($this->model->designation));
+        $this->model->created = htmlspecialchars(strip_tags($this->model->created));
+        $this->model->id = htmlspecialchars(strip_tags($this->model->id));
 
         // bind data
         $stmt->bindParam(":name", $this->model->name);

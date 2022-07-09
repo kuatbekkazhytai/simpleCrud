@@ -7,10 +7,10 @@ use PDOException;
 // TODO refactor to singleton
 class Database {
 
-    private $host = "127.0.0.1";
-    private $database_name = "phpapidb";
-    private $username = "kuatbek";
-    private $password = "lfc8milan22";
+    private $host = '127.0.0.1';
+    private $database_name = 'phpapidb';
+    private $username = 'kuatbek';
+    private $password = 'lfc8milan22';
     public $conn;
 
     /**
