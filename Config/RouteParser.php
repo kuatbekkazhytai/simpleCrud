@@ -6,14 +6,18 @@ class RouteParser {
     /**
      * @param string $method
      * @param string $route
-     * @param string $file
+     * @param array $pathToMethod
      * @return void
      */
-    public static function add(string $method, string $route, string $file): void {
+    public static function add(string $method, string $route, array $pathToMethod): void {
 
         if ($_SERVER['REQUEST_METHOD'] !== $method) {
             return;
         }
+        //remove App from controller namespace and add .php
+        $includes = str_replace('\\', '/', substr($pathToMethod[0], 3) . '.php');
+        include_once dirname(__FILE__, 2) . $includes;
+
         //will store all the parameters value in this array
         $params = [];
 
@@ -25,7 +29,7 @@ class RouteParser {
 
         //if the route does not contain any param call simpleRoute();
         if (empty($paramMatches[0])) {
-            self::simpleRoute($file,$route);
+            self::simpleRoute($pathToMethod, $route);
             return;
         }
 
@@ -86,17 +90,19 @@ class RouteParser {
 
         //now matching route with regex
         if (preg_match("/$reqUri/", $route)) {
-            include(getcwd(). $file);
+            $class = new $pathToMethod[0];
+            $function = $pathToMethod[1];
+            $class->$function($params);
             exit();
         }
     }
 
     /**
-     * @param string $file
+     * @param array $pathToMethod
      * @param string $route
      * @return void
      */
-    private static function simpleRoute(string $file, string $route): void {
+    private static function simpleRoute(array $pathToMethod, string $route): void {
         //replacing first and last forward slashes
         //$_REQUEST['uri'] will be empty if req uri is /
 
@@ -108,8 +114,9 @@ class RouteParser {
         }
 
         if ($reqUri == $route) {
-            $params = [];
-            include(getcwd(). $file);
+            $class = new $pathToMethod[0];
+            $function = $pathToMethod[1];
+            $class->$function();
             exit();
         }
     }

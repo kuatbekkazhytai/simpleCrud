@@ -28,4 +28,3 @@ class Employee implements ModelInterface
         return $this->db_table;
     }
 }
-

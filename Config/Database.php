@@ -8,13 +8,14 @@ use PDO;
 use Exception;
 
 class Database {
-    /**
-     * @var Database
-     */
+    /** @var Database */
     private static $instance;
     /** @var PDO */
     private $dbConn;
 
+    /**
+     * private constructor to avoid initialization
+     */
     private function __construct() {}
 
     /**
@@ -32,7 +33,7 @@ class Database {
     /**
      * @return Database
      */
-    private static function initConnection(): Database{
+    private static function initConnection(): Database {
         $db = self::getInstance();
         $configs = DbConfigs::getConfigs();
         $db->dbConn = new PDO('mysql:host=' . $configs['db_host'] . ';dbname=' . $configs['db_name'], $configs['db_username'], $configs['db_password']);
