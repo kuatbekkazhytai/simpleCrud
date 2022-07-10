@@ -26,9 +26,8 @@ class EmployeeController extends BaseController
      */
     public function __construct() {
         parent::__construct();
-        $model = new Employee();
-        $this->model = $model;
-        $this->repository = new EmployeeRepository($this->conn, $model);
+        $this->model = new Employee();
+        $this->repository = new EmployeeRepository($this->conn, $this->model);
     }
 
     /**
@@ -81,6 +80,56 @@ class EmployeeController extends BaseController
         } else {
             http_response_code(404);
             echo json_encode('Employee not found.');
+        }
+    }
+
+    public function store(array $request = null) {
+        $data = json_decode(file_get_contents('php://input'));
+        $this->model->name = $data->name;
+        $this->model->email = $data->email;
+        $this->model->age = $data->age;
+        $this->model->designation = $data->designation;
+        $this->model->created = date('Y-m-d H:i:s');
+
+        if ($this->repository->createEmployee()) {
+            echo 'Employee created successfully';
+        } else {
+            echo 'Employee could not be created';
+        }
+    }
+
+    /**
+     * @param array|null $request
+     * @return void
+     */
+    public function update(array $request = null): void {
+        $data = json_decode(file_get_contents('php://input'));
+        $this->model->id = $data->id;
+        $this->model->name = $data->name;
+        $this->model->email = $data->email;
+        $this->model->age = $data->age;
+        $this->model->designation = $data->designation;
+        $this->model->created = date('Y-m-d H:i:s');
+
+        if ($this->repository->updateEmployee()) {
+            echo json_encode('Employee data updated.');
+        } else {
+            echo json_encode('Data could not be updated');
+        }
+    }
+
+    /**
+     * @param array|null $request
+     * @return void
+     */
+    public function delete(array $request = null): void {
+        $data = json_decode(file_get_contents('php://input'));
+        $this->model->id = $data->id;
+
+        if ($this->repository->deleteEmployee()) {
+            echo json_encode('Employee deleted');
+        } else {
+            echo json_encode('Data could not be deleted');
         }
     }
 }
