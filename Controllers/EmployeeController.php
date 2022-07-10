@@ -78,7 +78,11 @@ class EmployeeController extends BaseController
         }
     }
 
-    public function store(array $request = null) {
+    /**
+     * @param array|null $request
+     * @return void
+     */
+    public function store(array $request = null): void {
         $data = json_decode(file_get_contents('php://input'));
         $this->model->name = $data->name;
         $this->model->email = $data->email;

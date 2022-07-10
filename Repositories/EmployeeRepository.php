@@ -3,24 +3,9 @@ namespace App\Repositories;
 
 use PDO;
 use PDOStatement;
-use App\Models\ModelInterface;
 
-class EmployeeRepository
+class EmployeeRepository extends BaseRepository
 {
-    /** @var ModelInterface */
-    private $model;
-    /** @var PDO */
-    private $conn;
-
-    /**
-     * @param PDO $db
-     * @param ModelInterface $model
-     */
-    public function __construct(PDO $db, ModelInterface $model) {
-        $this->model = $model;
-        $this->conn = $db;
-    }
-
     /**
      * @return false|PDOStatement
      */
