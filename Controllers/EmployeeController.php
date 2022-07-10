@@ -5,11 +5,6 @@ namespace App\Controllers;
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once dirname(__FILE__, 2) . '/Config/Database.php';
-include_once dirname(__FILE__, 2) . '/Models/Employee.php';
-include_once dirname(__FILE__, 2) . '/Repositories/EmployeeRepository.php';
-include_once dirname(__FILE__) . '/BaseController.php';
-
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
 use PDO;

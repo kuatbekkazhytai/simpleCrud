@@ -2,8 +2,6 @@
 
 namespace App\Config;
 
-include_once dirname(__FILE__) . '/DbConfigs.php';
-
 use PDO;
 use Exception;
 

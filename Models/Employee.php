@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-include_once 'ModelInterface.php';
-
 class Employee implements ModelInterface
 {
     /** @var string  */
