@@ -2,12 +2,8 @@
 
 namespace App\Controllers;
 
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
-use PDO;
 
 class EmployeeController extends BaseController
 {
@@ -44,14 +40,13 @@ class EmployeeController extends BaseController
     /**
      * @param array|null $request
      * @return void
-     * TODO remove getting post data directly from php://input. Use request
      */
     public function store(array $request = null): void {
-        $data = json_decode(file_get_contents('php://input'));
-        $this->model->name = $data->name;
-        $this->model->email = $data->email;
-        $this->model->age = $data->age;
-        $this->model->designation = $data->designation;
+        $requestData = $request['post'];
+        $this->model->name = $requestData->name;
+        $this->model->email = $requestData->email;
+        $this->model->age = $requestData->age;
+        $this->model->designation = $requestData->designation;
         $this->model->created = date('Y-m-d H:i:s');
 
         if ($this->repository->createEmployee()) {
@@ -64,15 +59,14 @@ class EmployeeController extends BaseController
     /**
      * @param array|null $request
      * @return void
-     * TODO remove getting post data directly from php://input. Use request
      */
-    public function update(array $request = null): void {
-        $data = json_decode(file_get_contents('php://input'));
-        $this->model->id = $data->id;
-        $this->model->name = $data->name;
-        $this->model->email = $data->email;
-        $this->model->age = $data->age;
-        $this->model->designation = $data->designation;
+    public function update(array $request): void {
+        $requestData = $request['post'];
+        $this->model->id = $requestData->id;
+        $this->model->name = $requestData->name;
+        $this->model->email = $requestData->email;
+        $this->model->age = $requestData->age;
+        $this->model->designation = $requestData->designation;
         $this->model->created = date('Y-m-d H:i:s');
 
         if ($this->repository->updateEmployee()) {
@@ -85,11 +79,10 @@ class EmployeeController extends BaseController
     /**
      * @param array|null $request
      * @return void
-     * TODO remove getting post data directly from php://input. Use request
      */
-    public function delete(array $request = null): void {
-        $data = json_decode(file_get_contents('php://input'));
-        $this->model->id = $data->id;
+    public function delete(array $request): void {
+        $requestData = $request['post'];
+        $this->model->id = $requestData->id;
 
         if ($this->repository->deleteEmployee()) {
             echo json_encode('Employee deleted');

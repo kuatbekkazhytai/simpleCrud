@@ -20,7 +20,7 @@ class Database {
      * @return Database
      */
     private static function getInstance(): Database {
-        if (self::$instance == null){
+        if (self::$instance == null) {
             $className = __CLASS__;
             self::$instance = new $className;
         }
