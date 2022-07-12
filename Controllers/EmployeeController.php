@@ -29,29 +29,7 @@ class EmployeeController extends BaseController
      * @return void
      */
     public function index() {
-        $stmt = $this->repository->getEmployees();
-        $itemCount = $stmt->rowCount();
-        if ($itemCount > 0) {
-            $employees['itemCount'] = $itemCount;
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                extract($row);
-                $employee = array(
-                    'id' => $id,
-                    'name' => $name,
-                    'email' => $email,
-                    'age' => $age,
-                    'designation' => $designation,
-                    'created' => $created
-                );
-                $employees['body'][] = $employee;
-            }
-            echo json_encode($employees);
-        } else {
-            http_response_code(404);
-            echo json_encode(
-                array('message' => 'No record found.')
-            );
-        }
+        echo $this->repository->getEmployees();
     }
 
     /**
@@ -60,22 +38,7 @@ class EmployeeController extends BaseController
      */
     public function show(array $request): void {
         $this->model->id = $request['id'];
-        $this->repository->getSingleEmployee();
-        if ($this->model->name != null) {
-            $employee = array(
-                'id' =>  $this->model->id,
-                'name' => $this->model->name,
-                'email' => $this->model->email,
-                'age' => $this->model->age,
-                'designation' => $this->model->designation,
-                'created' => $this->model->created
-            );
-            http_response_code(200);
-            echo json_encode($employee);
-        } else {
-            http_response_code(404);
-            echo json_encode('Employee not found.');
-        }
+        echo $this->repository->getSingleEmployee();
     }
 
     /**

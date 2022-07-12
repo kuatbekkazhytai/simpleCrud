@@ -2,19 +2,73 @@
 namespace App\Repositories;
 
 use PDO;
-use PDOStatement;
 
 class EmployeeRepository extends BaseRepository
 {
     /**
-     * @return false|PDOStatement
+     * @return false|string
      */
     public function getEmployees() {
         $sqlQuery = "SELECT id, name, email, age, designation, created FROM " . $this->model->getTableName();
         $stmt = $this->conn->prepare($sqlQuery);
         $stmt->execute();
+        $itemCount = $stmt->rowCount();
+        if ($itemCount > 0) {
+            $employees['itemCount'] = $itemCount;
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                extract($row);
+                $employee = array(
+                    'id' => $id,
+                    'name' => $name,
+                    'email' => $email,
+                    'age' => $age,
+                    'designation' => $designation,
+                    'created' => $created
+                );
+                $employees['body'][] = $employee;
+            }
+            $response = json_encode($employees);
+        } else {
+            http_response_code(404);
+            $response = json_encode(
+                array('message' => 'No record found.')
+            );
+        }
+        return $response;
+    }
 
-        return $stmt;
+    /**
+     * @return false|string
+     */
+    public function getSingleEmployee() {
+        $sqlQuery = "SELECT id, name, email, age, designation, created
+                      FROM
+                        ". $this->model->getTableName() ."
+                      WHERE 
+                       id = ?
+                      LIMIT 0,1";
+        $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->bindParam(1, $this->model->id);
+        $stmt->execute();
+        $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($dataRow['name']) {
+            $employee = array(
+                'id' =>  $this->model->id,
+                'name' => $dataRow['name'],
+                'email' => $dataRow['email'],
+                'age' => $dataRow['age'],
+                'designation' => $dataRow['designation'],
+                'created' => $dataRow['created']
+            );
+            http_response_code(200);
+            $response = json_encode($employee);
+        } else {
+            http_response_code(404);
+            $response = json_encode('Employee not found.');
+        }
+
+        return $response;
     }
 
     /**
@@ -49,32 +103,6 @@ class EmployeeRepository extends BaseRepository
         return $stmt->execute();
     }
 
-    /**
-     * @return void
-     */
-    public function getSingleEmployee(): void {
-        $sqlQuery = "SELECT
-                        id, 
-                        name, 
-                        email, 
-                        age, 
-                        designation, 
-                        created
-                      FROM
-                        ". $this->model->getTableName() ."
-                    WHERE 
-                       id = ?
-                    LIMIT 0,1";
-        $stmt = $this->conn->prepare($sqlQuery);
-        $stmt->bindParam(1, $this->model->id);
-        $stmt->execute();
-        $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->model->name = $dataRow['name'];
-        $this->model->email = $dataRow['email'];
-        $this->model->age = $dataRow['age'];
-        $this->model->designation = $dataRow['designation'];
-        $this->model->created = $dataRow['created'];
-    }
 
     /**
      * @return bool
