@@ -81,6 +81,7 @@ class EmployeeController extends BaseController
     /**
      * @param array|null $request
      * @return void
+     * TODO remove getting post data directly from php://input. Use request
      */
     public function store(array $request = null): void {
         $data = json_decode(file_get_contents('php://input'));
@@ -100,6 +101,7 @@ class EmployeeController extends BaseController
     /**
      * @param array|null $request
      * @return void
+     * TODO remove getting post data directly from php://input. Use request
      */
     public function update(array $request = null): void {
         $data = json_decode(file_get_contents('php://input'));
@@ -120,6 +122,7 @@ class EmployeeController extends BaseController
     /**
      * @param array|null $request
      * @return void
+     * TODO remove getting post data directly from php://input. Use request
      */
     public function delete(array $request = null): void {
         $data = json_decode(file_get_contents('php://input'));

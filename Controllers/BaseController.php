@@ -7,10 +7,8 @@ use PDO;
 
 class BaseController
 {
-    /**
-     * @var PDO|null
-     */
-    public $conn;
+    /** @var PDO|null */
+    protected $conn;
 
     /**
      *
