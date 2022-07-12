@@ -1,6 +1,6 @@
 # simpleCrud
 
-The first main idea of this project is to write self-made routing system, as well as developing requests for controllers. Some of OOP patterns to be used.
+The first main idea of this project is to write self-made routing system. Maybe this project will be expanded to light php framework. Some of OOP patterns to be used.
 
 To start:
 1. Enter root directory and "composer install"
