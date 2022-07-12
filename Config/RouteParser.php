@@ -14,20 +14,16 @@ class RouteParser {
         if ($_SERVER['REQUEST_METHOD'] !== $method) {
             return;
         }
-        //remove App from controller namespace and add .php
-        $includes = str_replace('\\', '/', substr($pathToMethod[0], 3) . '.php');
-        include_once dirname(__FILE__, 2) . $includes;
 
-        //will store all the parameters value in this array
+        //store params
         $params = [];
 
-        //will store all the parameters names in this array
+        //store params keys
         $paramKey = [];
 
-        //finding if there is any {?} parameter in $route
+        //check {?} parameter in $route
         preg_match_all("/(?<={).+?(?=})/", $route, $paramMatches);
 
-        //if the route does not contain any param call simpleRoute();
         if (empty($paramMatches[0])) {
             self::simpleRoute($pathToMethod, $route);
             return;
