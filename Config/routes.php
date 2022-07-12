@@ -1,10 +1,10 @@
 <?php
 
-use App\Config\RouteParser;
+use App\Config\Route;
 use App\Controllers\EmployeeController;
 
-RouteParser::add('GET', '/employees', [EmployeeController::class, 'index']);
-RouteParser::add('GET', '/employees/{id}', [EmployeeController::class, 'show']);
-RouteParser::add('POST', '/employees/create', [EmployeeController::class, 'store']);
-RouteParser::add('PUT', '/employees/update', [EmployeeController::class, 'update']);
-RouteParser::add('DELETE', '/employees/delete', [EmployeeController::class, 'delete']);
+Route::add('GET', '/employees', [EmployeeController::class, 'index']);
+Route::add('GET', '/employees/{id}', [EmployeeController::class, 'show']);
+Route::add('POST', '/employees/create', [EmployeeController::class, 'store']);
+Route::add('PUT', '/employees/update', [EmployeeController::class, 'update']);
+Route::add('DELETE', '/employees/delete', [EmployeeController::class, 'delete']);

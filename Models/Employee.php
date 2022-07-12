@@ -5,7 +5,7 @@ namespace App\Models;
 class Employee implements ModelInterface
 {
     /** @var string  */
-    private $db_table = 'Employee';
+    private $dbTable = 'Employee';
     /** @var int */
     public $id;
     /** @var string */
@@ -23,6 +23,6 @@ class Employee implements ModelInterface
      * @return string
      */
     public function getTableName(): string {
-        return $this->db_table;
+        return $this->dbTable;
     }
 }

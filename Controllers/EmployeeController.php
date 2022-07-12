@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Employee;
 use App\Repositories\EmployeeRepository;
+use App\Dto\EmployeeDto;
 
 class EmployeeController extends BaseController
 {
@@ -33,23 +34,17 @@ class EmployeeController extends BaseController
      * @return void
      */
     public function show(array $request): void {
-        $this->model->id = $request['id'];
-        echo $this->repository->getSingleEmployee();
+        echo $this->repository->getEmployeeById($request['id']);
     }
 
     /**
      * @param array|null $request
      * @return void
      */
-    public function store(array $request = null): void {
-        $requestData = $request['post'];
-        $this->model->name = $requestData->name;
-        $this->model->email = $requestData->email;
-        $this->model->age = $requestData->age;
-        $this->model->designation = $requestData->designation;
-        $this->model->created = date('Y-m-d H:i:s');
+    public function store(array $request): void {
+        $dto = EmployeeDto::createFromRequest($request);
 
-        if ($this->repository->createEmployee()) {
+        if ($this->repository->createEmployee($dto)) {
             echo 'Employee created successfully';
         } else {
             echo 'Employee could not be created';
@@ -61,15 +56,9 @@ class EmployeeController extends BaseController
      * @return void
      */
     public function update(array $request): void {
-        $requestData = $request['post'];
-        $this->model->id = $requestData->id;
-        $this->model->name = $requestData->name;
-        $this->model->email = $requestData->email;
-        $this->model->age = $requestData->age;
-        $this->model->designation = $requestData->designation;
-        $this->model->created = date('Y-m-d H:i:s');
+        $dto = EmployeeDto::createFromRequest($request);
 
-        if ($this->repository->updateEmployee()) {
+        if ($this->repository->updateEmployee($dto)) {
             echo json_encode('Employee data updated.');
         } else {
             echo json_encode('Data could not be updated');
@@ -81,10 +70,7 @@ class EmployeeController extends BaseController
      * @return void
      */
     public function delete(array $request): void {
-        $requestData = $request['post'];
-        $this->model->id = $requestData->id;
-
-        if ($this->repository->deleteEmployee()) {
+        if ($this->repository->deleteEmployeeById($request['post']->id)) {
             echo json_encode('Employee deleted');
         } else {
             echo json_encode('Data could not be deleted');

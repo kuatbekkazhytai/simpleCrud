@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Dto\EmployeeDto;
 use PDO;
 
 class EmployeeRepository extends BaseRepository
@@ -40,7 +41,7 @@ class EmployeeRepository extends BaseRepository
     /**
      * @return false|string
      */
-    public function getSingleEmployee() {
+    public function getEmployeeById(int $id) {
         $sqlQuery = "SELECT id, name, email, age, designation, created
                       FROM
                         ". $this->model->getTableName() ."
@@ -48,13 +49,14 @@ class EmployeeRepository extends BaseRepository
                        id = ?
                       LIMIT 0,1";
         $stmt = $this->conn->prepare($sqlQuery);
-        $stmt->bindParam(1, $this->model->id);
+        $stmt->bindParam(1, $id);
         $stmt->execute();
+
         $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($dataRow['name']) {
+        if ($dataRow) {
             $employee = array(
-                'id' =>  $this->model->id,
+                'id' =>  $id,
                 'name' => $dataRow['name'],
                 'email' => $dataRow['email'],
                 'age' => $dataRow['age'],
@@ -72,9 +74,10 @@ class EmployeeRepository extends BaseRepository
     }
 
     /**
+     * @param EmployeeDto $dto
      * @return bool
      */
-    public function createEmployee(): bool {
+    public function createEmployee(EmployeeDto $dto): bool {
         $sqlQuery = "INSERT INTO
                         ". $this->model->getTableName() ."
                     SET
@@ -87,11 +90,11 @@ class EmployeeRepository extends BaseRepository
         $stmt = $this->conn->prepare($sqlQuery);
 
         // sanitize
-        $this->model->name = htmlspecialchars(strip_tags($this->model->name));
-        $this->model->email = htmlspecialchars(strip_tags($this->model->email));
-        $this->model->age = htmlspecialchars(strip_tags($this->model->age));
-        $this->model->designation = htmlspecialchars(strip_tags($this->model->designation));
-        $this->model->created = htmlspecialchars(strip_tags($this->model->created));
+        $this->model->name = htmlspecialchars(strip_tags($dto->name));
+        $this->model->email = htmlspecialchars(strip_tags($dto->email));
+        $this->model->age = htmlspecialchars(strip_tags($dto->age));
+        $this->model->designation = htmlspecialchars(strip_tags($dto->designation));
+        $this->model->created = htmlspecialchars(strip_tags($dto->created));
 
         // bind data
         $stmt->bindParam(":name", $this->model->name);
@@ -103,11 +106,11 @@ class EmployeeRepository extends BaseRepository
         return $stmt->execute();
     }
 
-
     /**
+     * @param EmployeeDto $dto
      * @return bool
      */
-    public function updateEmployee(): bool {
+    public function updateEmployee(EmployeeDto $dto): bool {
         $sqlQuery = "UPDATE
                         ". $this->model->getTableName() ."
                     SET
@@ -121,12 +124,12 @@ class EmployeeRepository extends BaseRepository
 
         $stmt = $this->conn->prepare($sqlQuery);
 
-        $this->model->name = htmlspecialchars(strip_tags($this->model->name));
-        $this->model->email = htmlspecialchars(strip_tags($this->model->email));
-        $this->model->age = htmlspecialchars(strip_tags($this->model->age));
-        $this->model->designation = htmlspecialchars(strip_tags($this->model->designation));
-        $this->model->created = htmlspecialchars(strip_tags($this->model->created));
-        $this->model->id = htmlspecialchars(strip_tags($this->model->id));
+        $this->model->name = htmlspecialchars(strip_tags($dto->name));
+        $this->model->email = htmlspecialchars(strip_tags($dto->email));
+        $this->model->age = htmlspecialchars(strip_tags($dto->age));
+        $this->model->designation = htmlspecialchars(strip_tags($dto->designation));
+        $this->model->created = htmlspecialchars(strip_tags($dto->created));
+        $this->model->id = htmlspecialchars(strip_tags($dto->id));
 
         // bind data
         $stmt->bindParam(":name", $this->model->name);
@@ -140,14 +143,15 @@ class EmployeeRepository extends BaseRepository
     }
 
     /**
+     * @param int $id
      * @return bool
      */
-    public function deleteEmployee(): bool {
+    public function deleteEmployeeById(int $id): bool {
         $sqlQuery = "DELETE FROM " . $this->model->getTableName() . " WHERE id = ?";
         $stmt = $this->conn->prepare($sqlQuery);
 
         $this->model->id = htmlspecialchars(strip_tags($this->model->id));
-        $stmt->bindParam(1,$this->model->id);
+        $stmt->bindParam(1,$id);
 
         return $stmt->execute();
     }
