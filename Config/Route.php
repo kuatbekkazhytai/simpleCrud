@@ -2,7 +2,8 @@
 
 namespace App\Config;
 
-class RouteParser {
+class Route
+{
     /** @var array to store params */
     private static $params = [];
     /** @var array to store param keys */

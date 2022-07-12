@@ -5,7 +5,8 @@ namespace App\Config;
 use PDO;
 use Exception;
 
-class Database {
+class Database
+{
     /** @var Database */
     private static $instance;
     /** @var PDO */
