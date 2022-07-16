@@ -101,8 +101,7 @@ class AuthController extends BaseController
                         if ($check_password) {
                             $jwt = new JwtHandler();
                             $token = $jwt->jwtEncodeData(
-                                'http://localhost/php_auth_api/',
-                                array("user_id" => $user['id'])
+                                array('user_id' => $user['id'])
                             );
                             $response->setStatus(200)
                                 ->setMessage('You have successfully logged in.')
@@ -125,8 +124,7 @@ class AuthController extends BaseController
      * @return void
      */
     public function getUser() {
-        $allHeaders = getallheaders();
-        $auth = new AuthMiddleware($this->repository, $allHeaders);
+        $auth = new AuthMiddleware($this->repository);
 
         echo json_encode($auth->isValid());
     }

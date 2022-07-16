@@ -55,24 +55,28 @@ class UserRepository extends BaseRepository
      * @return bool|void
      */
     public function createUser(DtoInterface $dto) {
-        $query = "INSERT INTO `users`(`username`,`email`,`password`) VALUES(:name,:email,:password)";
+        try {
+            $query = "INSERT INTO `users`(`username`,`email`,`password`) VALUES(:name,:email,:password)";
 
-        $stmt = $this->conn->prepare($query);
+            $stmt = $this->conn->prepare($query);
 
-        $name = htmlspecialchars(strip_tags($dto->username));
-        $email = htmlspecialchars(strip_tags($dto->email));
-        $password = password_hash($dto->password, PASSWORD_DEFAULT);
+            $name = htmlspecialchars(strip_tags($dto->username));
+            $email = htmlspecialchars(strip_tags($dto->email));
+            $password = password_hash($dto->password, PASSWORD_DEFAULT);
 
-        // DATA BINDING
-        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':password', $password, PDO::PARAM_STR);
-        // TODO throw exception if statement executed with error
-        if (!$stmt->execute()) {
-            var_dump($stmt->errorInfo());
-            die;
-        } else {
-            return true;
+            // DATA BINDING
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+            // TODO throw exception if statement executed with error
+            if (!$stmt->execute()) {
+                var_dump($stmt->errorInfo());
+                die;
+            } else {
+                return true;
+            }
+        } catch (PDOException $e) {
+            return null;
         }
     }
 }

@@ -7,12 +7,20 @@ use Exception;
 
 class JwtHandler
 {
+    /** @var string */
     protected $jwt_secrect;
+    /** @var  */
     protected $token;
+    /** @var int */
     protected $issuedAt;
+    /** @var int */
     protected $expire;
+    /** @var  */
     protected $jwt;
 
+    /**
+     *
+     */
     public function __construct() {
         date_default_timezone_set('Asia/Kolkata');
         $this->issuedAt = time();
@@ -21,23 +29,22 @@ class JwtHandler
     }
 
     /**
-     * @param $iss
-     * @param $data
+     * @param array $data
      * @return string
      */
-    public function jwtEncodeData($iss, $data) {
-        $iss = $_SERVER["HTTP_HOST"];
-        $iss = "THE_ISSUER";
+    public function jwtEncodeData(array $data): string {
+        $iss = $_SERVER['HTTP_HOST'];
 
         $this->token = array(
-            "iss" => "THE_ISSUER",
-            "aud" => "THE_AUDIENCE",
+            "iss" => $iss,
+            "aud" => $iss,
             "iat" => $this->issuedAt,
             "exp" => $this->expire,
             "data" => $data
         );
 
         $this->jwt = JWT::encode($this->token, $this->jwt_secrect, 'HS256');
+
         return $this->jwt;
     }
 

@@ -13,12 +13,11 @@ class AuthMiddleware extends JwtHandler
 
     /**
      * @param RepositoryInterface $repository
-     * @param $headers
      */
-    public function __construct(RepositoryInterface $repository, $headers) {
+    public function __construct(RepositoryInterface $repository) {
         parent::__construct();
         $this->repository = $repository;
-        $this->headers = $headers;
+        $this->headers = getallheaders();
     }
 
     /**

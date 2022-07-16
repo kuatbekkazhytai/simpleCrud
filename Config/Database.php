@@ -31,6 +31,14 @@ class Database
     }
 
     /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function __clone() {
+        throw new Exception("Can't clone a singleton");
+    }
+
+    /**
      * @return Database
      */
     private static function getInstance(): Database {
@@ -52,13 +60,5 @@ class Database
         $db->dbConn->exec('set names utf8');
 
         return $db;
-    }
-
-    /**
-     * @return mixed
-     * @throws Exception
-     */
-    public function __clone() {
-        throw new Exception("Can't clone a singleton");
     }
 }
