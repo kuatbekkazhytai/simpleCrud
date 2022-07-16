@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
-class Employee extends Model
+class User extends Model
 {
     /** @var string  */
-    protected $dbTable = 'Employee';
+    protected $dbTable = 'users';
     /** @var int */
     public $id;
     /** @var string */
-    public $name;
+    public $username;
     /** @var $email */
     public $email;
     /** @var int */
-    public $age;
+    private $password;
     /** @var string */
-    public $designation;
-    /** @var string */
-    public $created;
-
+    public $createdAt;
 }
