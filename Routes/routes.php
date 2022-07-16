@@ -1,6 +1,6 @@
 <?php
 
-use App\Config\Route;
+use App\Routes\Route;
 use App\Controllers\AuthController;
 use App\Controllers\EmployeeController;
 

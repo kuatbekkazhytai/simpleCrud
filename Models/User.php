@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-class User implements ModelInterface
+class User extends Model
 {
     /** @var string  */
-    private $dbTable = 'users';
+    protected $dbTable = 'users';
     /** @var int */
     public $id;
     /** @var string */
@@ -16,11 +16,4 @@ class User implements ModelInterface
     private $password;
     /** @var string */
     public $createdAt;
-
-    /**
-     * @return string
-     */
-    public function getTableName(): string {
-        return $this->dbTable;
-    }
 }

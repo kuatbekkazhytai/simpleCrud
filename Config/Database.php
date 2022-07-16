@@ -18,6 +18,19 @@ class Database
     private function __construct() {}
 
     /**
+     * @return PDO|null
+     */
+    public static function getDbConnection(): ?PDO {
+        try {
+            $db = self::initConnection();
+            return $db->dbConn;
+        } catch (Exception $ex) {
+            echo 'I was unable to open a connection to the database. ' . $ex->getMessage();
+            return null;
+        }
+    }
+
+    /**
      * @return Database
      */
     private static function getInstance(): Database {
@@ -39,19 +52,6 @@ class Database
         $db->dbConn->exec('set names utf8');
 
         return $db;
-    }
-
-    /**
-     * @return PDO|null
-     */
-    public static function getDbConnection(): ?PDO {
-        try {
-            $db = self::initConnection();
-            return $db->dbConn;
-        } catch (Exception $ex) {
-            echo 'I was unable to open a connection to the database. ' . $ex->getMessage();
-            return null;
-        }
     }
 
     /**

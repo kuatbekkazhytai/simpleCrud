@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-class Employee implements ModelInterface
+class Employee extends Model
 {
     /** @var string  */
-    private $dbTable = 'Employee';
+    protected $dbTable = 'Employee';
     /** @var int */
     public $id;
     /** @var string */
@@ -19,10 +19,4 @@ class Employee implements ModelInterface
     /** @var string */
     public $created;
 
-    /**
-     * @return string
-     */
-    public function getTableName(): string {
-        return $this->dbTable;
-    }
 }
