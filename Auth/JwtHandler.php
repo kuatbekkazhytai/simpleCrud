@@ -13,21 +13,19 @@ class JwtHandler
     protected $expire;
     protected $jwt;
 
-    public function __construct()
-    {
-        // set your default time-zone
+    public function __construct() {
         date_default_timezone_set('Asia/Kolkata');
         $this->issuedAt = time();
-
-        // Token Validity (3600 second = 1hr)
         $this->expire = $this->issuedAt + 3600;
-
-        // Set your secret or signature
         $this->jwt_secrect = 'this_is_my_secrect';
     }
 
-    public function jwtEncodeData($iss, $data)
-    {
+    /**
+     * @param $iss
+     * @param $data
+     * @return string
+     */
+    public function jwtEncodeData($iss, $data) {
         $iss = $_SERVER["HTTP_HOST"];
         $iss = "THE_ISSUER";
 
@@ -43,8 +41,11 @@ class JwtHandler
         return $this->jwt;
     }
 
-    public function jwtDecodeData(string $jwt_token)
-    {
+    /**
+     * @param string $jwt_token
+     * @return mixed
+     */
+    public function jwtDecodeData(string $jwt_token) {
         try {
             $decode = JWT::decode($jwt_token, new Key($this->jwt_secrect, 'HS256'));
             return $decode->data;

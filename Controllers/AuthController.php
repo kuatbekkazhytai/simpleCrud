@@ -3,11 +3,10 @@
 namespace App\Controllers;
 
 use App\Auth\AuthMiddleware;
-use App\Dto\EmployeeDto;
-use App\Dto\UserDto;
+use App\Helpers\Response;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use PDO;
+use App\Dto\UserDto;
 use PDOException;
 use App\Auth\JwtHandler;
 
@@ -18,18 +17,23 @@ class AuthController extends BaseController
     /** @var UserRepository */
     private $repository;
 
+    /**
+     *
+     */
     public function __construct() {
         parent::__construct();
         $this->model = new User();
         $this->repository = new UserRepository($this->conn, $this->model);
     }
 
+    /**
+     * @param array $request
+     * @return void
+     */
     public function register(array $request) {
         $dto = UserDto::createFromRequest($request);
-
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $returnData = $this->msg(0, 404, 'Page Not Found!');
-        } elseif  (
+        $response = new Response(422);
+        if (
             !isset($dto->username)
             || !isset($dto->email)
             || !isset($dto->password)
@@ -38,107 +42,92 @@ class AuthController extends BaseController
             || empty(trim($dto->password))
         ) {
             $fields = ['fields' => ['username', 'email', 'password']];
-            $returnData = $this->msg(0, 422, 'Please Fill in all Required Fields!', $fields);
+            $response->setMessage('Please Fill in all Required Fields!')
+                ->setExtra($fields);
         } else {
             $dto->username = trim($dto->username);
             $dto->email = trim($dto->email);
             $dto->password = trim($dto->password);
             if (!filter_var($dto->email, FILTER_VALIDATE_EMAIL)) {
-                $returnData = $this->msg(0, 422, 'Invalid Email Address!');
+                $response->setMessage('Invalid Email Address!');
             } elseif (strlen($dto->password) < 8) {
-                $returnData = $this->msg(0, 422, 'Your password must be at least 8 characters long!');
+                $response->setMessage('Your password must be at least 8 characters long!');
             } elseif (strlen($dto->username) < 3) {
-                $returnData = $this->msg(0, 422, 'Your name must be at least 3 characters long!');
+                $response->setMessage('Your name must be at least 3 characters long!');
             } else {
                 try {
                     if ($user = $this->repository->getUserByEmail($dto->email))  {
-                        $returnData = $this->msg(0, 422, 'This E-mail already in use!');
+                        $response->setMessage('This E-mail already in use!');
                     } else {
                         if ($user = $this->repository->createUser($dto)) {
-                            $returnData = $this->msg(1, 201, 'You have successfully registered.');
+                            $response->setStatus(201)->setMessage('You have successfully registered.');
                         }
                     }
                 } catch (PDOException $e) {
-                    $returnData = $this->msg(0, 500, $e->getMessage());
+                    $response->setStatus(500)->setMessage($e->getMessage());
                 }
             }
         }
-        echo json_encode($returnData);
+        echo json_encode($response->message());
     }
 
-    public function login() {
-        $data = json_decode(file_get_contents('php://input'));
-
-        if($_SERVER['REQUEST_METHOD'] != 'POST') {
-            $returnData = $this->msg(0,404,'Page Not Found!');
-        } elseif(!isset($data->email)
-            || !isset($data->password)
-            || empty(trim($data->email))
-            || empty(trim($data->password))
+    /**
+     * @param array $request
+     * @return void
+     */
+    public function login(array $request) {
+        $dto = UserDto::createFromRequest($request);
+        $response = new Response(422);
+        if (!isset($dto->email)
+            || !isset($dto->password)
+            || empty(trim($dto->email))
+            || empty(trim($dto->password))
         ) {
             $fields = ['fields' => ['email','password']];
-            $returnData = $this->msg(0,422,'Please Fill in all Required Fields!',$fields);
+            $response->setMessage('Please Fill in all Required Fields!')->setExtra($fields);
         } else {
-            $email = trim($data->email);
-            $password = trim($data->password);
+            $dto->email = trim($dto->email);
+            $dto->password = trim($dto->password);
 
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $returnData = $this->msg(0, 422, 'Invalid Email Address!');
-            } elseif (strlen($password) < 8) {
-                $returnData = $this->msg(0, 422, 'Your password must be at least 8 characters long!');
+            if (!filter_var($dto->email, FILTER_VALIDATE_EMAIL)) {
+                $response->setMessage('Invalid Email Address!');
+            } elseif (strlen($dto->password) < 8) {
+                $response->setMessage('Your password must be at least 8 characters long!');
             } else {
                 try {
+                    if ($user = $this->repository->getUserByEmail($dto->email)) {
 
-                    $fetch_user_by_email = "SELECT * FROM `users` WHERE `email`=:email";
-                    $query_stmt = $this->conn->prepare($fetch_user_by_email);
-                    $query_stmt->bindValue(':email', $email, PDO::PARAM_STR);
-                    $query_stmt->execute();
-
-                    // IF THE USER IS FOUNDED BY EMAIL
-                    if ($query_stmt->rowCount()) {
-                        $row = $query_stmt->fetch(PDO::FETCH_ASSOC);
-                        $check_password = password_verify($password, $row['password']);
-
-                        // VERIFYING THE PASSWORD (IS CORRECT OR NOT?)
-                        // IF PASSWORD IS CORRECT THEN SEND THE LOGIN TOKEN
+                        $check_password = password_verify($dto->password, $user['password']);
                         if ($check_password) {
                             $jwt = new JwtHandler();
                             $token = $jwt->jwtEncodeData(
                                 'http://localhost/php_auth_api/',
-                                array("user_id" => $row['id'])
+                                array("user_id" => $user['id'])
                             );
-
-                            $returnData = [
-                                'success' => 1,
-                                'message' => 'You have successfully logged in.',
-                                'token' => $token
-                            ];
+                            $response->setStatus(200)
+                                ->setMessage('You have successfully logged in.')
+                                ->setExtra(['token' => $token]);
                         } else {
-                            $returnData = $this->msg(0, 422, 'Invalid Password!');
+                            $response->setMessage('Invalid Password');
                         }
-                    } else {
-                        $returnData = $this->msg(0, 422, 'Invalid Email Address!');
+                    }  else {
+                        $response->setMessage('Invalid Email Address!');
                     }
                 } catch (PDOException $e) {
-                    $returnData = $this->msg(0, 500, $e->getMessage());
+                    $response->setStatus(500)->setMessage( $e->getMessage());
                 }
             }
         }
-        echo json_encode($returnData);
+        echo json_encode($response->message());
     }
 
+    /**
+     * @return void
+     */
     public function getUser() {
         $allHeaders = getallheaders();
         $auth = new AuthMiddleware($this->repository, $allHeaders);
 
         echo json_encode($auth->isValid());
-    }
-
-    protected function msg($success, $status, $message, $extra = []) {
-        return array_merge([
-            'success' => $success,
-            'status' => $status,
-            'message' => $message
-        ], $extra);
     }
 }

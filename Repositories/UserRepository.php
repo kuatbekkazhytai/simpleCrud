@@ -35,7 +35,7 @@ class UserRepository extends BaseRepository
      */
     public function getUserByEmail(string $email) {
         try {
-            $query = "SELECT `email` FROM `users` WHERE `email`=:email";
+            $query = "SELECT `id`, `username`, `email`, `password` FROM `users` WHERE `email`=:email";
             $stmt = $this->conn->prepare($query);
             $stmt->bindValue(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
@@ -50,6 +50,10 @@ class UserRepository extends BaseRepository
         }
     }
 
+    /**
+     * @param DtoInterface $dto
+     * @return bool|void
+     */
     public function createUser(DtoInterface $dto) {
         $query = "INSERT INTO `users`(`username`,`email`,`password`) VALUES(:name,:email,:password)";
 
