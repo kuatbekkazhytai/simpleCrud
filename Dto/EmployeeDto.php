@@ -2,7 +2,7 @@
 
 namespace App\Dto;
 
-class EmployeeDto
+class EmployeeDto implements DtoInterface
 {
     public $id;
     public $name;

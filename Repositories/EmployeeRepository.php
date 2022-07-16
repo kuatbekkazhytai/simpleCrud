@@ -1,7 +1,7 @@
 <?php
 namespace App\Repositories;
 
-use App\Dto\EmployeeDto;
+use App\Dto\DtoInterface;
 use PDO;
 
 class EmployeeRepository extends BaseRepository
@@ -74,10 +74,10 @@ class EmployeeRepository extends BaseRepository
     }
 
     /**
-     * @param EmployeeDto $dto
+     * @param DtoInterface $dto
      * @return bool
      */
-    public function createEmployee(EmployeeDto $dto): bool {
+    public function createEmployee(DtoInterface $dto): bool {
         $sqlQuery = "INSERT INTO
                         ". $this->model->getTableName() ."
                     SET
@@ -107,10 +107,10 @@ class EmployeeRepository extends BaseRepository
     }
 
     /**
-     * @param EmployeeDto $dto
+     * @param DtoInterface $dto
      * @return bool
      */
-    public function updateEmployee(EmployeeDto $dto): bool {
+    public function updateEmployee(DtoInterface $dto): bool {
         $sqlQuery = "UPDATE
                         ". $this->model->getTableName() ."
                     SET
