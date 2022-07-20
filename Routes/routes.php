@@ -13,6 +13,3 @@ Route::add('DELETE', '/employees/delete', [EmployeeController::class, 'delete'])
 Route::add('POST', '/users/register', [AuthController::class, 'register']);
 Route::add('POST', '/users/login', [AuthController::class, 'login']);
 Route::add('GET', '/users/get', [AuthController::class, 'getUser']);
-
-
-
