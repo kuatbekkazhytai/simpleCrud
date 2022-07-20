@@ -29,6 +29,7 @@ class AuthController extends BaseController
     /**
      * @param array $request
      * @return void
+     * TODO refactor method. Create validation classes. Move logic to services
      */
     public function register(array $request) {
         $dto = UserDto::createFromRequest($request);
@@ -74,6 +75,8 @@ class AuthController extends BaseController
     /**
      * @param array $request
      * @return void
+     *
+     * ODO refactor method. Create validation classes. Move logic to services
      */
     public function login(array $request) {
         $dto = UserDto::createFromRequest($request);

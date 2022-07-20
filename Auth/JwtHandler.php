@@ -8,7 +8,7 @@ use Exception;
 class JwtHandler
 {
     /** @var string */
-    protected $jwt_secrect;
+    protected $jwt_secret;
     /** @var  */
     protected $token;
     /** @var int */
@@ -25,7 +25,7 @@ class JwtHandler
         date_default_timezone_set('Asia/Kolkata');
         $this->issuedAt = time();
         $this->expire = $this->issuedAt + 3600;
-        $this->jwt_secrect = 'this_is_my_secrect';
+        $this->jwt_secret = 'this_is_my_secret';
     }
 
     /**
@@ -43,7 +43,7 @@ class JwtHandler
             "data" => $data
         );
 
-        $this->jwt = JWT::encode($this->token, $this->jwt_secrect, 'HS256');
+        $this->jwt = JWT::encode($this->token, $this->jwt_secret, 'HS256');
 
         return $this->jwt;
     }
@@ -54,7 +54,7 @@ class JwtHandler
      */
     public function jwtDecodeData(string $jwt_token) {
         try {
-            $decode = JWT::decode($jwt_token, new Key($this->jwt_secrect, 'HS256'));
+            $decode = JWT::decode($jwt_token, new Key($this->jwt_secret, 'HS256'));
             return $decode->data;
         } catch (Exception $e) {
             return $e->getMessage();

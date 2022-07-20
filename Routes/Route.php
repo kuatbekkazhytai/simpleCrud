@@ -2,6 +2,8 @@
 
 namespace App\Routes;
 
+//TODO optimize parsing. Add middleware
+
 class Route
 {
     /** @var array to store params */
