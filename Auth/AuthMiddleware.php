@@ -6,7 +6,9 @@ use App\Repositories\RepositoryInterface;
 
 class AuthMiddleware extends JwtHandler
 {
+    /** @var array|false */
     protected $headers;
+    /** @var string */
     protected $token;
     /** @var RepositoryInterface */
     private $repository;
